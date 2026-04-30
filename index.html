@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>八尾徳洲会総合病院 手術室 — 物品管理システム</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans JP',sans-serif;background:#080b11;color:#dde4f0;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
+.logo{font-size:40px;margin-bottom:16px;}
+h1{font-size:20px;font-weight:700;margin-bottom:6px;text-align:center;}
+.sub{font-size:13px;color:#7a899e;margin-bottom:40px;text-align:center;}
+.cards{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;max-width:700px;}
+.card{
+  background:#0f1420;border:1px solid rgba(255,255,255,0.12);border-radius:16px;
+  padding:28px 24px;width:200px;text-align:center;text-decoration:none;color:#dde4f0;
+  transition:all .2s;
+}
+.card:hover{border-color:#3b82f6;transform:translateY(-3px);box-shadow:0 12px 40px rgba(59,130,246,.2);}
+.card-icon{font-size:36px;margin-bottom:12px;}
+.card-title{font-size:15px;font-weight:700;margin-bottom:6px;}
+.card-desc{font-size:11px;color:#7a899e;line-height:1.6;}
+.footer{margin-top:40px;font-size:11px;color:#3d4f63;text-align:center;}
+@media(max-width:480px){.cards{flex-direction:column;align-items:center;}.card{width:100%;max-width:300px;}}
+</style>
+</head>
+<body>
+<div class="logo">🏥</div>
+<h1>八尾徳洲会総合病院 手術室</h1>
+<div class="sub">物品管理・発注支援システム</div>
+<div class="cards">
+  <a href="medstock.html" class="card">
+    <div class="card-icon">📊</div>
+    <div class="card-title">MedStock</div>
+    <div class="card-desc">需要予測・在庫分析<br>手術ガントチャート<br>SPD在庫照合</div>
+  </a>
+  <a href="medorder.html" class="card">
+    <div class="card-icon">📋</div>
+    <div class="card-title">MedOrder</div>
+    <div class="card-desc">発注チェックリスト<br>発注書自動生成<br>手術日別確認</div>
+  </a>
+</div>
+<div class="footer">パスワード: yao890　／　八尾徳洲会総合病院 手術室 専用</div>
+</body>
+</html>
