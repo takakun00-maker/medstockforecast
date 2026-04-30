@@ -762,6 +762,31 @@ input, select, button, .tab, .fbtn, .bar, .nbtn, .vbtn, .pbtn, .ebtn, .filter-bt
     <span class="hb g">📦 実績 13ファイル 118,540行</span>
     <span class="hb r">🔴 月100個超 48品目</span>
   </div>
+  <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+    <a href="medorder.html" style="
+      display:inline-flex;align-items:center;gap:6px;
+      padding:7px 14px;border-radius:8px;
+      background:linear-gradient(135deg,rgba(249,115,22,.15),rgba(239,68,68,.15));
+      border:1px solid rgba(249,115,22,.4);
+      color:#fb923c;font-size:12px;font-weight:600;
+      text-decoration:none;transition:all .15s;white-space:nowrap;
+      font-family:var(--font);
+    " onmouseover="this.style.background='linear-gradient(135deg,rgba(249,115,22,.3),rgba(239,68,68,.3))'"
+      onmouseout="this.style.background='linear-gradient(135deg,rgba(249,115,22,.15),rgba(239,68,68,.15))'">
+      📋 発注管理へ
+    </a>
+    <button onclick="doLogout()" style="
+      display:inline-flex;align-items:center;gap:6px;
+      padding:7px 14px;border-radius:8px;
+      background:var(--bg3);border:1px solid var(--border2);
+      color:var(--text2);font-size:12px;font-weight:500;
+      cursor:pointer;transition:all .15s;white-space:nowrap;
+      font-family:var(--font);
+    " onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'"
+      onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text2)'">
+      🔒 ログアウト
+    </button>
+  </div>
 </header>
 
 <div class="tabs">
@@ -1149,6 +1174,13 @@ function renderOverviewCards(){
 
 // ── パスワード認証 ──
 var PW = 'yao890';
+function doLogout(){
+  if(confirm('ログアウトしますか？')){
+    document.getElementById('pwScreen').style.display='flex';
+    document.getElementById('pwInput').value='';
+    document.getElementById('pwErr').textContent='';
+  }
+}
 function checkPw(){
   var v = document.getElementById('pwInput').value;
   if(v === PW){
