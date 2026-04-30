@@ -233,6 +233,66 @@ tr.rg{border-left:3px solid var(--grn);}
 .abox.m .atitle{color:var(--yel);}.abox.g .atitle{color:var(--grn);}
 .abody{font-size:12px;color:var(--text2);line-height:1.7;}
 
+/* ─ Password Screen ─ */
+#pw-screen{
+  position:fixed;inset:0;background:#080b11;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:9999;
+}
+@keyframes pw-fadein{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pw-pulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
+@keyframes pw-blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes pw-scanline{0%{top:-10%}100%{top:110%}}
+#pw-screen .pw-bg-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(59,130,246,.1) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.1) 1px,transparent 1px);
+  background-size:60px 60px;pointer-events:none;
+}
+#pw-screen .pw-orb{position:absolute;border-radius:50%;pointer-events:none;}
+#pw-screen .pw-scanline{
+  position:absolute;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(59,130,246,.4),transparent);
+  animation:pw-scanline 4s linear infinite;pointer-events:none;
+}
+.pw-card2{
+  position:relative;z-index:2;
+  background:rgba(15,20,32,.9);
+  border:1px solid rgba(59,130,246,.25);border-radius:20px;
+  padding:40px 36px 32px;width:340px;text-align:center;
+  backdrop-filter:blur(20px);
+  box-shadow:0 0 0 1px rgba(59,130,246,.08),0 32px 80px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.06);
+  animation:pw-fadein .5s ease both;
+}
+.pw-card2::before{content:'';position:absolute;top:0;left:20%;right:20%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(59,130,246,.6),transparent);}
+.pw-logo2{width:60px;height:60px;margin:0 auto 16px;border-radius:14px;
+  background:linear-gradient(135deg,rgba(249,115,22,.2),rgba(239,68,68,.2));
+  border:1px solid rgba(249,115,22,.3);display:flex;align-items:center;justify-content:center;
+  font-size:26px;box-shadow:0 0 20px rgba(249,115,22,.15);}
+.pw-status2{display:inline-flex;align-items:center;gap:6px;font-size:10px;
+  color:#f97316;letter-spacing:.1em;font-family:var(--mono);margin-bottom:14px;
+  background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.2);
+  padding:4px 12px;border-radius:20px;}
+.pw-status2-dot{width:6px;height:6px;background:#10b981;border-radius:50%;
+  animation:pw-blink 1.5s ease-in-out infinite;box-shadow:0 0 6px #10b981;}
+.pw-title2{font-size:17px;font-weight:700;color:#e8eaf0;margin-bottom:4px;}
+.pw-sub2{font-size:11px;color:#6b7a94;margin-bottom:24px;line-height:1.7;}
+.pw-wrap2{display:flex;align-items:center;background:rgba(8,11,17,.6);
+  border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:0 14px;margin-bottom:12px;
+  transition:border-color .2s,box-shadow .2s;}
+.pw-wrap2:focus-within{border-color:rgba(59,130,246,.6);box-shadow:0 0 0 3px rgba(59,130,246,.1);}
+.pw-wrap2 input{flex:1;background:none;border:none;outline:none;color:#e8eaf0;
+  font-size:16px;padding:13px 0;font-family:var(--font);}
+.pw-wrap2 input::placeholder{color:#3a4155;}
+.pw-eye2{background:none;border:none;cursor:pointer;font-size:16px;padding:4px;color:#525d72;}
+.pw-btn2{width:100%;padding:13px;background:linear-gradient(135deg,#ea580c,#dc2626);
+  border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:600;cursor:pointer;
+  font-family:var(--font);transition:all .2s;letter-spacing:.04em;
+  box-shadow:0 4px 20px rgba(234,88,12,.3);}
+.pw-btn2:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(234,88,12,.45);}
+.pw-err2{font-size:12px;color:#ef4444;margin-top:10px;min-height:18px;font-family:var(--mono);}
+.pw-hint2{font-size:10px;color:#2a3246;margin-top:14px;letter-spacing:.06em;}
+
 /* ─ Print styles ─ */
 @media print{
   .hdr,.tabs,.toolbar,.update-banner,.act-btn,.fbtn,
@@ -266,6 +326,28 @@ tr.rg{border-left:3px solid var(--grn);}
 </head>
 <body>
 
+<!-- ─ PASSWORD SCREEN ─ -->
+<div id="pw-screen">
+  <div class="pw-bg-grid"></div>
+  <div class="pw-orb" style="width:400px;height:400px;background:radial-gradient(circle,rgba(249,115,22,.12) 0%,transparent 70%);top:-80px;left:-80px;animation:pw-pulse 6s ease-in-out infinite"></div>
+  <div class="pw-orb" style="width:350px;height:350px;background:radial-gradient(circle,rgba(239,68,68,.1) 0%,transparent 70%);bottom:-60px;right:-60px;animation:pw-pulse 8s ease-in-out infinite 2s"></div>
+  <div class="pw-scanline"></div>
+  <div class="pw-card2">
+    <div class="pw-logo2">📋</div>
+    <div class="pw-status2"><span class="pw-status2-dot"></span>SECURE ACCESS</div>
+    <div class="pw-title2">MedOrder</div>
+    <div class="pw-sub2">八尾徳洲会総合病院 手術室<br>発注管理システム</div>
+    <div class="pw-wrap2">
+      <input type="password" id="pw-input2" placeholder="パスワードを入力"
+        onkeydown="if(event.key==='Enter')checkPw2()" autocomplete="off">
+      <button class="pw-eye2" onclick="toggleEye2()" type="button">👁</button>
+    </div>
+    <button class="pw-btn2" onclick="checkPw2()">入室する</button>
+    <div class="pw-err2" id="pw-err2"></div>
+    <div class="pw-hint2">関係者専用ページです</div>
+  </div>
+</div>
+
 <!-- ─ HEADER ─ -->
 <div class="hdr">
   <div class="logo">
@@ -279,6 +361,29 @@ tr.rg{border-left:3px solid var(--grn);}
   <div class="hdr-right">
     <span id="spd-date-badge" style="font-size:11px;color:var(--text2);background:var(--bg3);border:1px solid var(--border2);padding:4px 10px;border-radius:6px;">SPD: 2026/4/27時点</span>
     <button class="act-btn outline" onclick="window.print()">🖨️ 印刷</button>
+    <a href="medstock.html" style="
+      display:inline-flex;align-items:center;gap:6px;
+      padding:8px 14px;border-radius:8px;
+      background:linear-gradient(135deg,rgba(59,130,246,.15),rgba(139,92,246,.15));
+      border:1px solid rgba(59,130,246,.35);
+      color:#60a5fa;font-size:12px;font-weight:600;
+      text-decoration:none;transition:all .15s;white-space:nowrap;
+      font-family:var(--font);
+    " onmouseover="this.style.background='linear-gradient(135deg,rgba(59,130,246,.3),rgba(139,92,246,.3))'"
+      onmouseout="this.style.background='linear-gradient(135deg,rgba(59,130,246,.15),rgba(139,92,246,.15))'">
+      📊 予測ダッシュボードへ
+    </a>
+    <button onclick="doLogout()" style="
+      display:inline-flex;align-items:center;gap:6px;
+      padding:8px 14px;border-radius:8px;
+      background:var(--bg3);border:1px solid var(--border2);
+      color:var(--text2);font-size:12px;font-weight:500;
+      cursor:pointer;transition:all .15s;white-space:nowrap;
+      font-family:var(--font);
+    " onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'"
+      onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text2)'">
+      🔒 ログアウト
+    </button>
   </div>
 </div>
 
@@ -873,6 +978,33 @@ function showTab(id){
 
 // ── printOrder ──
 function printOrder(){ window.print(); }
+
+// ── Password ──
+var PW2 = 'yao890';
+function checkPw2(){
+  var v = document.getElementById('pw-input2').value;
+  if(v === PW2){
+    document.getElementById('pw-screen').style.display = 'none';
+  } else {
+    var err = document.getElementById('pw-err2');
+    err.textContent = 'パスワードが違います';
+    document.getElementById('pw-input2').value = '';
+    setTimeout(function(){ err.textContent = ''; }, 2000);
+  }
+}
+function toggleEye2(){
+  var inp = document.getElementById('pw-input2');
+  var btn = inp.nextElementSibling;
+  if(inp.type==='password'){ inp.type='text'; btn.textContent='🙈'; }
+  else { inp.type='password'; btn.textContent='👁'; }
+}
+function doLogout(){
+  if(confirm('ログアウトしますか？')){
+    document.getElementById('pw-screen').style.display = 'flex';
+    document.getElementById('pw-input2').value = '';
+    document.getElementById('pw-err2').textContent = '';
+  }
+}
 
 // ── Init ──
 initHeader();
