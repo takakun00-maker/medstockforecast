@@ -327,7 +327,7 @@ tr.rg{border-left:3px solid var(--grn);}
 <body>
 
 <!-- ─ PASSWORD SCREEN ─ -->
-<div id="pw-screen">
+<div id="pw-screen" style="display:none">
   <div class="pw-bg-grid"></div>
   <div class="pw-orb" style="width:400px;height:400px;background:radial-gradient(circle,rgba(249,115,22,.12) 0%,transparent 70%);top:-80px;left:-80px;animation:pw-pulse 6s ease-in-out infinite"></div>
   <div class="pw-orb" style="width:350px;height:350px;background:radial-gradient(circle,rgba(239,68,68,.1) 0%,transparent 70%);bottom:-60px;right:-60px;animation:pw-pulse 8s ease-in-out infinite 2s"></div>
@@ -993,9 +993,9 @@ function printOrder(){ window.print(); }
 // ── Password ──
 var PW2 = 'yao890';
 
-// index.htmlで認証済みならパスワード画面をスキップ
-if(sessionStorage.getItem('yao_auth') === '1'){
-  document.getElementById('pw-screen').style.display = 'none';
+// 未認証の場合のみパスワード画面を表示
+if(sessionStorage.getItem('yao_auth') !== '1'){
+  document.getElementById('pw-screen').style.display = 'flex';
 }
 
 function checkPw2(){
