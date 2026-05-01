@@ -2243,7 +2243,18 @@ function _loadCSVFile(file){
       for(let i=1; i<lines.length; i++){
         const line = lines[i].trim();
         if(!line) continue;
-        const vals = parseCSVLine(line);
+        // CSV1行パース（ダブルクォート対応）
+        const vals = (function(l){
+          const res=[]; let cur='', inQ=false;
+          for(let ci=0;ci<l.length;ci++){
+            const ch=l[ci];
+            if(ch==='"'){inQ=!inQ;}
+            else if(ch===','&&!inQ){res.push(cur);cur='';}
+            else{cur+=ch;}
+          }
+          res.push(cur);
+          return res;
+        })(line);
         if(vals.length < 5) continue;
         const row = {};
         headers.forEach((h,j)=>{ row[h]=(vals[j]||'').replace(/"/g,'').trim(); });
@@ -2356,6 +2367,77 @@ function _loadExcelFile(file){
 }
 
 // 現在のタブを再描画
+
+// ── ヒートマップ・物品予測用スケジュール更新 ──
+function updateScheduleFromOps(ops){
+  const dateMap={};
+  ops.forEach(op=>{
+    const d=op.date; if(!d) return;
+    if(!dateMap[d]) dateMap[d]={};
+    const key=classifyOpStr(op.op)||(op.dept+'-その他');
+    dateMap[d][key]=(dateMap[d][key]||0)+1;
+  });
+  SCHED.length=0;
+  Object.entries(dateMap).forEach(([date,ops])=>SCHED.push({date,ops}));
+}
+
+function classifyOpStr(op){
+  if(!op) return null;
+  if(op.includes('PEA')||op.includes('白内障')) return '白内障手術(PEA+IOL)';
+  if(op.includes('硝子体茎')) return '硝子体手術';
+  if(op.includes('硝子体内注射')) return '硝子体内注射';
+  if(op.includes('緑内障')) return '緑内障手術';
+  if(op.includes('眼瞼下垂')) return '眼瞼下垂症手術';
+  if(op.includes('LADG')||op.includes('幽門側胃切除')) return '腹腔鏡下幽門側胃切除術(LADG)';
+  if(op.includes('TAPP')) return '腹腔鏡下TAPP';
+  if(op.includes('腹腔鏡下胆嚢')) return '腹腔鏡下胆嚢摘出術';
+  if(op.includes('低位前方')||op.includes('ハルトマン')) return '低位前方切除術/ハルトマン';
+  if(op.includes('虫垂')) return '腹腔鏡下虫垂切除術';
+  if(op.includes('乳房切除')||op.includes('SLN')) return '乳房切除+SLN生検';
+  if(op.includes('胸腔鏡')&&op.includes('肺')) return '胸腔鏡下肺切除術';
+  if(op.includes('ORIF')||op.includes('骨折観血')) return '骨折観血的手術(ORIF)';
+  if(op.includes('椎弓切除')) return '椎弓切除術';
+  if(op.includes('埋伏')||op.includes('抜歯')) return '埋伏歯抜歯術(口腔外科)';
+  if(op.includes('TUR-B')) return 'TUR-Bt';
+  if(op.includes('ステントグラフト')||op.includes('ｽﾃﾝﾄｸﾞﾗﾌﾄ')) return 'ステントグラフト内挿術';
+  if(op.includes('皮膚腫瘍')||op.includes('皮膚悪性')) return '皮膚腫瘍摘出術(形成外科)';
+  if(op.includes('ロボット')) return 'ロボット支援手術';
+  return null;
+}
+
+function rebuildMatched(){
+  try{
+    const updated=MATCHED.map(m=>{
+      const nm=String(m['材料名称']||m.name||'').replace(/[\s\u3000]/g,'').toLowerCase();
+      const spd=SPD_ALL.find(s=>{
+        const sn=String(s.name||'').replace(/[\s\u3000]/g,'').toLowerCase();
+        return sn===nm||sn.includes(nm.slice(0,8))||nm.includes(sn.slice(0,8));
+      });
+      if(!spd) return m;
+      const stock=parseFloat(spd.stock||0);
+      const pred=parseInt(m['月間予測']||m.pred||0);
+      const short=Math.max(0,pred-stock);
+      const risk=short>=100?'C':short>=30?'H':short>=1?'M':'OK';
+      return {...m,SPD在庫:stock,不足数:short,risk,
+        hinban:spd.hinban||m.hinban||'',
+        kataban:spd.kataban||m.kataban||'',
+        maker:spd.maker||m.maker||''};
+    });
+    MATCHED.length=0; updated.forEach(m=>MATCHED.push(m));
+  }catch(e){console.warn('rebuildMatched error:',e);}
+}
+
+function setUpdateStatus(msg){
+  const el = document.getElementById('update-status');
+  if(el){ el.textContent=msg; el.style.display='inline-flex';
+    setTimeout(()=>{el.style.display='none';},4000); }
+  const now=new Date();
+  const ts=(now.getMonth()+1)+'/'+now.getDate()+' '+now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
+  localStorage.setItem('last_update',ts);
+  const lt=document.getElementById('last-update-text');
+  if(lt) lt.textContent='最終更新: '+ts;
+  return ts;
+}
 function refreshCurrentTab(){
   const tab = document.querySelector('.tab.active');
   if(!tab) return;
