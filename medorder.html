@@ -361,6 +361,17 @@ tr.rg{border-left:3px solid var(--grn);}
   <div class="hdr-right">
     <span id="spd-date-badge" style="font-size:11px;color:var(--text2);background:var(--bg3);border:1px solid var(--border2);padding:4px 10px;border-radius:6px;">SPD: 2026/4/27時点</span>
     <button class="act-btn outline" onclick="window.print()">🖨️ 印刷</button>
+    <a href="index.html" style="
+      display:inline-flex;align-items:center;gap:6px;
+      padding:8px 14px;border-radius:8px;
+      background:var(--bg3);border:1px solid var(--border2);
+      color:var(--text2);font-size:12px;font-weight:500;
+      text-decoration:none;transition:all .15s;white-space:nowrap;
+      font-family:var(--font);
+    " onmouseover="this.style.borderColor='#3b82f6';this.style.color='#3b82f6'"
+      onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text2)'">
+      🏠 トップへ
+    </a>
     <a href="medstock.html" style="
       display:inline-flex;align-items:center;gap:6px;
       padding:8px 14px;border-radius:8px;
@@ -981,9 +992,16 @@ function printOrder(){ window.print(); }
 
 // ── Password ──
 var PW2 = 'yao890';
+
+// index.htmlで認証済みならパスワード画面をスキップ
+if(sessionStorage.getItem('yao_auth') === '1'){
+  document.getElementById('pw-screen').style.display = 'none';
+}
+
 function checkPw2(){
   var v = document.getElementById('pw-input2').value;
   if(v === PW2){
+    sessionStorage.setItem('yao_auth','1');
     document.getElementById('pw-screen').style.display = 'none';
   } else {
     var err = document.getElementById('pw-err2');
@@ -999,10 +1017,9 @@ function toggleEye2(){
   else { inp.type='password'; btn.textContent='👁'; }
 }
 function doLogout(){
-  if(confirm('ログアウトしますか？')){
-    document.getElementById('pw-screen').style.display = 'flex';
-    document.getElementById('pw-input2').value = '';
-    document.getElementById('pw-err2').textContent = '';
+  if(confirm('ログアウトしますか？\nトップページに戻ります。')){
+    sessionStorage.removeItem('yao_auth');
+    window.location.href = 'index.html';
   }
 }
 
